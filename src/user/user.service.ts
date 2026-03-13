@@ -77,7 +77,8 @@ export class UserService {
     };
   }
 
-  async relativeProduct(): Promise<ResponseInterface> {
+  async relativeProduct(id: ObjectId): Promise<ResponseInterface> {
+    console.log(id);
     const user = await this.userModel.find({}, 'email').exec();
 
     if (!user) {
