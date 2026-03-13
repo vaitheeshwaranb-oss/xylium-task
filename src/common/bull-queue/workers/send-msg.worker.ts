@@ -1,17 +1,24 @@
-import { Processor, WorkerHost } from "@nestjs/bullmq";
-import { Job } from "bullmq";
+import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Job } from 'bullmq';
 
 @Processor('messageQueue')
 export class SendMsgQueue extends WorkerHost {
-    async process(job: Job): Promise<any> {
-        await new Promise(reslove => setTimeout(reslove, 3000));
+  async process(job: Job): Promise<any> {
+    await new Promise((reslove) => setTimeout(reslove, 3000));
 
-        if (job?.name === 'send-msg') {
-            const attempt = job.attemptsMade + 1;
-            console.log(job?.data?.message);
-            console.log(`Attempt: ${attempt}`);
-        }
+    if (job?.name === 'send-msg') {
+      const attempt = job.attemptsMade + 1;
 
-        throw new Error('Error!');
+      if (!job?.data?.message) {
+        throw new Error('Email Not Found!');
+      }
+
+      console.log(job?.data?.message);
+      console.log(`Attempt: ${attempt}`);
+
+      return true;
     }
+
+    throw new Error('Error!');
+  }
 }

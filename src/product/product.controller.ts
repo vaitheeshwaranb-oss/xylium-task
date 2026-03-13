@@ -1,4 +1,13 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ResponseInterface } from 'src/common/interface/response.interface';
 import { ProductDto, UpdateProductDto } from './dto/product.dto';
@@ -7,32 +16,54 @@ import mongoose from 'mongoose';
 
 @Controller('product')
 export class ProductController {
-    
-    constructor(
-        private productService: ProductService
-    ) {}
+  constructor(private productService: ProductService) {}
 
-    @Post()
-    async createNewProduct(@Body() createProductDto: ProductDto): Promise<ResponseInterface> {
-        if (!createProductDto) {
-            throw new NotFoundException(GeneralEnum.NOT_FOUND);
-        }
-
-        return await this.productService.createNewProduct(createProductDto);
+  @Post()
+  async createNewProduct(
+    @Body() createProductDto: ProductDto,
+  ): Promise<ResponseInterface> {
+    if (!createProductDto) {
+      throw new NotFoundException(GeneralEnum.NOT_FOUND);
     }
 
-    @Get()
-    async fetchAll(): Promise<ResponseInterface> {
-        return await this.productService.fetchAll();
-    }
+    return await this.productService.createNewProduct(createProductDto);
+  }
 
-    @Get(':id')
-    async findById(@Param('id') id: mongoose.Schema.Types.ObjectId): Promise<ResponseInterface> {
-        return await this.productService.fetchById(id);
-    }
+  @Post('redis')
+  async setToRedis(
+    @Body() body: { key: string; value: string },
+  ): Promise<ResponseInterface> {
+    const { key, value } = body;
+    return await this.productService.setValueToRedis(key, value);
+  }
 
-    @Patch(':id')
-    async update(@Param('id') id: mongoose.Schema.Types.ObjectId, @Body() updateProductDto: UpdateProductDto): Promise<ResponseInterface> {
-        return await this.productService.update(id, updateProductDto);
-    }
+  @Get('redis/:key')
+  async getFromRedis(@Param('key') key: string): Promise<ResponseInterface> {
+    return await this.productService.getValueFromRedis(key);
+  }
+
+  @Get()
+  async fetchAll(): Promise<ResponseInterface> {
+    return await this.productService.fetchAll();
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<ResponseInterface> {
+    return await this.productService.fetchById(id);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: mongoose.Schema.Types.ObjectId,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<ResponseInterface> {
+    return await this.productService.update(id, updateProductDto);
+  }
+
+  @Delete(':id')
+  async remove(
+    @Param('id') id: mongoose.Schema.Types.ObjectId,
+  ): Promise<ResponseInterface> {
+    return await this.productService.remove(id);
+  }
 }

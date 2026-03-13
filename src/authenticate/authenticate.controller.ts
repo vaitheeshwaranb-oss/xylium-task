@@ -5,14 +5,10 @@ import { AuthenticateService } from './authenticate.service';
 
 @Controller('auth')
 export class AuthenticateController {
+  constructor(private authService: AuthenticateService) {}
 
-    constructor(
-        private authService: AuthenticateService
-    ) {}
-
-    @Post('login')
-    async login(@Body() authDto: AuthDto ): Promise<ResponseInterface> {
-        return await this.authService.login(authDto);
-    }
-
+  @Post('login')
+  async login(@Body() authDto: AuthDto): Promise<ResponseInterface> {
+    return await this.authService.login(authDto);
+  }
 }

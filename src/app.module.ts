@@ -7,7 +7,14 @@ import { ProductModule } from './product/product.module';
 import { BullDashboardModule } from './bull-dashboard/bull-dashboard.module';
 
 @Module({
-  imports: [ForwardModule, ConfigurationModule, UserModule, AuthenticateModule, ProductModule, BullDashboardModule],
+  imports: [
+    ForwardModule,
+    ConfigurationModule,
+    UserModule,
+    AuthenticateModule,
+    ProductModule,
+    BullDashboardModule,
+  ],
   providers: [],
 })
 export class AppModule {}

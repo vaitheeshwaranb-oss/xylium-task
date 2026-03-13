@@ -8,11 +8,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
 
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
 
-  app.useGlobalInterceptors(new ResponseInterceptor);
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   const config = app.get(ConfigurationService);
   const PORT = config.portConfig ?? 3000;
@@ -20,4 +22,5 @@ async function bootstrap() {
     console.log(`running at http://localhost:${PORT}`);
   });
 }
-bootstrap();
+
+void bootstrap();

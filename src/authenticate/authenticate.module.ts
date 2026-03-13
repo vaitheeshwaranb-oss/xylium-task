@@ -9,18 +9,16 @@ import { ConfigurationService } from 'src/common/configuration/configuration.ser
 
 @Module({
   imports: [
-    MongooseModule.forFeature(
-      [{ name: User.name, schema: UserSchema }]
-    ),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.registerAsync({
       imports: [ConfigurationModule],
       inject: [ConfigurationService],
       useFactory: (config: ConfigurationService) => ({
-        secret: config.jwtConfig
-      })
+        secret: config.jwtConfig,
+      }),
     }),
   ],
   controllers: [AuthenticateController],
-  providers: [AuthenticateService]
+  providers: [AuthenticateService],
 })
 export class AuthenticateModule {}
