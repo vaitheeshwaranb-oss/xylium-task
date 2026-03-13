@@ -6,6 +6,9 @@ export class VerifyUserGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest<Request>();
+    console.log(request);
+    console.log('working');
     return true;
   }
 }

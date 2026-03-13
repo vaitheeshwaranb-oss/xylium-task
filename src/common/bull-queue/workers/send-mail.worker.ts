@@ -1,9 +1,10 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
+import { SendMailDto } from 'src/user/dto/user-details.dto';
 
 @Processor('mailQueue')
 export class SendMailWorker extends WorkerHost {
-  async process(job: Job): Promise<any> {
+  async process(job: Job<SendMailDto>): Promise<any> {
     if (job?.name === 'send-mail') {
       await new Promise((reslove) => setTimeout(reslove, 3000));
       const delay = 3000 * Math.pow(2, job.attemptsMade);
@@ -13,16 +14,18 @@ export class SendMailWorker extends WorkerHost {
         throw new Error('Not Found!');
       }
 
-      job.updateProgress(25);
+      await job.updateProgress(25);
       console.log('25% completed');
 
-      job.updateProgress(50);
+      await job.updateProgress(50);
       console.log('50% completed');
 
-      job.updateProgress(100);
+      await job.updateProgress(100);
       console.log('completed');
 
-      console.log(job?.data);
+      const mail: string = job?.data?.mail;
+
+      console.log(mail);
       console.log(`Attempt Delay: ${delay / 1000}`);
       return true;
     }

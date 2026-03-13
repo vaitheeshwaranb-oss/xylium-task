@@ -1,4 +1,3 @@
-import { BullBoardModule } from '@bull-board/nestjs';
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { BullDashboardModule } from 'src/bull-dashboard/bull-dashboard.module';
